@@ -1,11 +1,11 @@
-# +, -, *, /, (, )
+# +, -, *, /, (, ), ^
 
 """
 - can't have double parentheses
 """
 
 parentheses = ["(", ")"]
-operations = ["+", "-", "/", "*"]
+operations = ["+", "-", "/", "*", "^"]
 numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
 def add(a, b):
@@ -20,6 +20,9 @@ def subtract(a, b):
 def divide(a, b):
   return a/b
 
+def power(a, b):
+  return a**b
+
 def toOperator(operator):
   if operator == "+":
     return add
@@ -29,6 +32,10 @@ def toOperator(operator):
     return subtract
   elif operator == "/":
     return divide
+  elif operator == "^":
+    return power
+  else:
+    raise Exception("this shouldn't happen")
 
 def tokenize(exp_whitespace):
   exp = exp_whitespace.replace(" ", "")
@@ -118,7 +125,7 @@ def evaluate(exp):
     return exp[1]*-1
   elif type(exp[0]) == int:
     func = toOperator(exp[1])
-    if func == multiply or func == divide:
+    if func != sum and func != subtract:
       if type(exp[2]) == int:
         return evaluate([func(exp[0], exp[2])] + exp[3:])
       else:
