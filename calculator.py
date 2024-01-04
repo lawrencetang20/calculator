@@ -96,13 +96,10 @@ def find_matching_parentheses(exp):
       left_counter += 1
     elif token == ")":
       right_counter += 1
-    
     if left_counter == right_counter:
       return index
   
   raise Exception("This shouldn't happen")
-
-
 
 def evaluate(exp):
   if len(exp) == 0:
@@ -122,7 +119,12 @@ def evaluate(exp):
   elif type(exp[0]) == int:
     func = toOperator(exp[1])
     if func == multiply or func == divide:
-      return evaluate([func(exp[0], exp[2])] + exp[3:])
+      if type(exp[2]) == int:
+        return evaluate([func(exp[0], exp[2])] + exp[3:])
+      else:
+        index = find_matching_parentheses(exp[2:])
+        paren = evaluate(exp[2:2+index+1])
+        return evaluate([func(exp[0], paren)] + exp[2+index+1:])
     else:
       return func(exp[0], evaluate(exp[2:]))
 
