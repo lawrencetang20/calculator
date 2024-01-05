@@ -135,9 +135,12 @@ def evaluate(exp):
     else:
       return func(exp[0], evaluate(exp[2:]))
 
-expression = input("Enter in expression wih negative numbers in parentheses, i.e. 3*(-4): \n")
+stop = True
 
-exp_tokenized = tokenize(expression)
-is_valid(exp_tokenized)
-
-print(evaluate(exp_tokenized))
+while(stop):
+  expression = input("Enter in expression wih negative numbers in parentheses, i.e. 3*(-4). If you want to stop, type stop: \n")
+  if expression == "stop":
+    break
+  exp_tokenized = tokenize(expression)
+  is_valid(exp_tokenized)
+  print(evaluate(exp_tokenized))
