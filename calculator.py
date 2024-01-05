@@ -1,9 +1,5 @@
 # +, -, *, /, (, ), ^
 
-"""
-- can't have double parentheses
-"""
-
 parentheses = ["(", ")"]
 operations = ["+", "-", "/", "*", "^"]
 numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
@@ -57,7 +53,7 @@ def tokenize(exp_whitespace):
     if item in parentheses or item in operations:
       continue
     else:
-      arr_exp[index] = int(item)
+      arr_exp[index] = float(item)
 
   return arr_exp
 
@@ -74,7 +70,7 @@ def is_valid(exp):
         raise Exception("Input error, consecutive operations")
       elif token in parentheses and exp[index+1] != token and exp[index+1] in parentheses:
         raise Exception("Input error, () cannot be parsed")
-      elif index > 0 and token in parentheses and type(exp[index+1]) == int and type(exp[index-1]) == int:
+      elif index > 0 and token in parentheses and type(exp[index+1]) == float and type(exp[index-1]) == float:
         raise Exception("Input error, not valid expression, cannot have number(number, need an operation")
       elif index > 0 and token in operations and token != "-" and exp[index-1] == "(":
         raise Exception("Input error, cannot have (operation sequence")
@@ -109,9 +105,10 @@ def find_matching_parentheses(exp):
   raise Exception("This shouldn't happen")
 
 def evaluate(exp):
+  print(exp)
   if len(exp) == 0:
     return None
-  elif len(exp) == 1 and type(exp[0]) == int:
+  elif len(exp) == 1 and type(exp[0]) == float:
     return exp[0]
   elif exp[0] == "(":
     matching_index = find_matching_parentheses(exp)
@@ -123,10 +120,10 @@ def evaluate(exp):
       return evaluate([inside, exp[matching_index+1], outside])
   elif exp[0] == "-":
     return exp[1]*-1
-  elif type(exp[0]) == int:
+  elif type(exp[0]) == float:
     func = toOperator(exp[1])
     if func != sum and func != subtract:
-      if type(exp[2]) == int:
+      if type(exp[2]) == float:
         return evaluate([func(exp[0], exp[2])] + exp[3:])
       else:
         index = find_matching_parentheses(exp[2:])
@@ -135,12 +132,10 @@ def evaluate(exp):
     else:
       return func(exp[0], evaluate(exp[2:]))
 
-stop = True
-
-while(stop):
-  expression = input("Enter in expression wih negative numbers in parentheses, i.e. 3*(-4). If you want to stop, type stop: \n")
-  if expression == "stop":
-    break
-  exp_tokenized = tokenize(expression)
+def calculate(str):
+  exp_tokenized = tokenize(str)
   is_valid(exp_tokenized)
-  print(evaluate(exp_tokenized))
+  return evaluate(exp_tokenized)
+
+# string = input("enter: ")
+# print(calculate(string))
